@@ -1,0 +1,133 @@
+basePath: /api/v1
+definitions:
+  main.Client:
+    properties:
+      AllowedIPs:
+        type: string
+      ClientIP:
+        type: string
+      PrivateKey:
+        type: string
+      ProfileID:
+        type: integer
+      ProfileName:
+        type: string
+      PublicKey:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: WireGuard Configuration Manager API
+  version: 0.0.1
+paths:
+  /apply:
+    post:
+      description: Responds with the request status
+      responses:
+        "200":
+          description: OK
+      summary: Apply server config
+      tags:
+      - server
+  /profiles:
+    get:
+      description: Responds with the list of all client profiles as JSON
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/main.Client'
+              type: array
+            type: array
+      summary: List all profiles
+      tags:
+      - profiles
+  /profiles/{profileName}:
+    delete:
+      description: Responds with the deleted client profile as JSON
+      parameters:
+      - description: Profile Name
+        in: path
+        name: profileName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Client'
+      summary: Delete profile by name
+      tags:
+      - profiles
+    get:
+      description: Responds with the client profile as JSON
+      parameters:
+      - description: Profile Name
+        in: path
+        name: profileName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Client'
+      summary: List profile by name
+      tags:
+      - profiles
+  /profiles/{profileName}/getconf:
+    get:
+      description: Responds with the client profile config as plain text
+      parameters:
+      - description: Profile Name
+        in: path
+        name: profileName
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      summary: Get profile config
+      tags:
+      - profiles
+  /profiles/new:
+    post:
+      description: Responds with the newly created client profile as JSON
+      parameters:
+      - description: Profile Name
+        in: formData
+        name: profileName
+        required: true
+        type: string
+      - description: Client IP
+        in: formData
+        name: clientIP
+        required: true
+        type: string
+      - description: Allowed IPs
+        in: formData
+        name: allowedIPs
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Client'
+      summary: Create new profile
+      tags:
+      - profiles
+swagger: "2.0"
